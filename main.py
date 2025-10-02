@@ -24,14 +24,17 @@ def save_task():
 def add_task():
     global task_id_counter
 
+    # 4.1 fetch details using get()
     title = title_entry.get()
     description = desc_entry.get()
     due_date = due_date_entry.get()
 
+    # 4.2 warning to fill details 
     if not title or not description or not due_date:
         messagebox.showwarning("Input Error", "Please fill out all fields")
         return
     
+    # 4.3 Prompts user to enter
     task = {
         "ID": task_id_counter,
         "Title": title,
@@ -42,16 +45,18 @@ def add_task():
     tasks.append(task)
     task_id_counter += 1
 
+    # 4.4 calling save function to save details
     save_task()
 
+    # 4.5 display details 
     messagebox.showinfo("Task Added", f"Task successfully added!\n\n"
                         f"ID: {task['ID']}\n"
                         f"Title: {task['Title']}\n"
                         f"Description: {task['Description']}\n"
                         f"Due_Date: {task['Due_Date']}\n"
                         f"Status: {task['Status']}")
-
-    # 4.1 clear the fields
+    
+    # 4.6 clear the fields
     title_entry.delete(0, tk.END)
     desc_entry.delete(0, tk.END)
     due_date_entry.delete(0, tk.END)
@@ -85,11 +90,14 @@ def view_tasks():
         )
     tree.pack(expand=True, fill="both")
 
+    # 5.6 button to update task
     update_btn = tk.Button(view_win, text="Update Task", command=lambda: update_task(tree, view_win))
     update_btn.pack(pady=10)
 
 # 6. function to update task
 def update_task(tree, view_win):
+
+    # 6.1 User selects a task from the table.
     selected_item = tree.selection()
     if not selected_item:
         messagebox.showwarning("selection Error", "Please Please select a task to update.")
@@ -98,13 +106,13 @@ def update_task(tree, view_win):
     task_values = tree.item(selected_item[0], "values")
     task_id = int(task_values[0])
 
-    # 6.1 find task in list
+    # 6.2 find task in list
     task = next((t for t in tasks if t["ID"] == task_id), None)
     if not task:
         messagebox.showerror("Error", "Task not found.")
         return
     
-    # open update form
+    # 6.3 open update form
     update_win = tk.Toplevel(view_win)
     update_win.title("Update Task")
     update_win.geometry("400x250")
@@ -129,6 +137,7 @@ def update_task(tree, view_win):
     status_dropdown = ttk.Combobox(update_win, textvariable=status_var, values=["Pending", "Completed"])
     status_dropdown.grid(row=3, column=1, padx=5, pady=5)
 
+    # 6.4 After editing, user clicks Save:
     def save_update():
         task["Title"] = title_entry_u.get()
         task["Description"] = desc_entry_u.get()
